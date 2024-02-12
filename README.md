@@ -8,3 +8,8 @@ Dominican-American. 24. M.S. Data Analysis and Visualization student at the CUNY
 
 Storing and showcasing work for my D3 class.
 
+### Testing image upload
+
+![Central Park image](jermaine-ee-A2CChTZvzTE-unsplash.jpg)
+
+
