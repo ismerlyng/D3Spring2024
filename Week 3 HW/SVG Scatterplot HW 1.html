@@ -52,7 +52,7 @@
                 .enter()
                 .append("circle")
                 .attr("cx", (d, i) => d[0]) //(a required circle value, and a function of what it returns)  // Hint: we want to return d[] with the x value of the array
-                .attr("cy", (d, i) => d[1]) //(a required circle value, and a function of what it returns)  // Hint: we want to return d[] with the y value of the array 
+                .attr("cy", (d, i) => svgHeight - d[1]) //(a required circle value, and a function of what it returns)  // Hint: we want to return d[] with the y value of the array 
                 .attr("r", 10) //(another required circle value, and a number: try 10)
                 .attr("fill", "green"); //optional: change the color of the circles 
 
@@ -67,10 +67,8 @@
             .enter()
             .append("text")
             .text(d => d[0] + ", " + d[1]) //we want the text to return the data values
-            .attr("x", (d,i) => d[0]) //we want to give the text an x value, use what you used above, mind the difference between circle text properties 
-            .attr("y", (d,i) => d[1]) //we want to give the text a y value, use what you used above, mind the difference between circle text properties 
-            .attr("dy", -20) 
-            .style("text-anchor", "middle")
+            .attr("x", (d,i) => d[0] + 14) //we want to give the text an x value, use what you used above, mind the difference between circle text properties, adding pixels at the end with +
+            .attr("y", (d,i) => svgHeight - d[1] + 2) //we want to give the text a y value, use what you used above, mind the difference between circle text properties  
             .attr("font-size", "14px")
             .attr("fill", "green");
 
