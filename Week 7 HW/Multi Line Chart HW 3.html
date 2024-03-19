@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Multi-Line</title>
+        <script src= "https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+
+            .axis path, 
+            .axis line {
+                stroke: midnightblue;
+            }
+
+            .axis text{
+                font-family: sans-serif;
+                font-size: 10px;
+                fill: midnightblue;
+            }
+        
+            .line1 {
+                fill: none; 
+                stroke: #0000ff; 
+                stroke-width: 2px;
+
+            }
+
+            .line2 {
+                fill: none; 
+                stroke: #009933; 
+                stroke-width: 2px;
+
+            }
+  
+           
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            
+            //Consts/global variables  
+            const w = 500;
+            const h = 500;
+            const margin = 50;//rename to margin
+            const parseTime = d3.timeParse("%Y");//time parser reads time in its format as shows in csv
+
+        
+            
+            d3.csv("multi line chart data.csv").then(data => {
+            console.log("data", data)
+                
+                data.forEach(d => { 
+                d.year = parseTime(d.year);//parse this time data
+                d.caseworkeravg = +d.caseworkeravg;
+                d.directoravg = +d.directoravg;    
+                });
+            
+            //scales - with Scale Time
+            const xScale = d3.scaleTime()
+                             .domain(d3.extent(data, d => d.year)) 
+                             .range([margin, w-margin]); 
+
+            const yScale = d3.scaleLinear()
+                             .domain([0, d3.max(data, d => Math.max(d.caseworkeravg, d.directoravg))]) 
+                             .range([h-margin, margin]); 
+            
+            //Example
+
+                //const yScale = d3.scaleLinear()
+                //.domain([0, d3.max(data, d => Math.max(d.min, d.max))]) 
+                            //.range([h-margin, margin]); 
+
+
+
+            //SVG
+            const svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+
+
+            //bottom axis with tick time formatting
+            const bottomAxis = d3.axisBottom()
+                                .scale(xScale)
+                                //.tickFormat(d3.timeFormat("%b-%Y"))
+                                //.ticks(d3.timeMonth.every(2));
+                                //.ticks(4);
+             
+            svg.append("g")
+                .attr("class", "axis") 
+                .attr("transform", "translate(0," + (h-margin) + ")") 
+                .call(bottomAxis);
+            
+            //left axis
+            const leftAxis = d3.axisLeft()
+                             .scale(yScale);
+                             //.ticks(4);
+            
+            svg.append("g")
+               .attr("class", "axis") 
+               .attr("transform", "translate(" + margin + ",0)")
+               .call(leftAxis);
+
+            
+
+            //line generator with optional curves
+                            //.curve(d3.curveStepAfter)
+                            //.curve(d3.curveBasis)
+                            //.curve(d3.curveNatural)
+            const line1 = d3.line()
+                            .x(d=>xScale(d.year))
+                            .y(d=>yScale(d.caseworkeravg));
+
+            const line2 = d3.line()
+                            .x(d=>xScale(d.year))
+                            .y(d=>yScale(d.directoravg));     
+
+            console.log("Line 1 path:", line1(data));
+            console.log("Line 2 path:", line2(data));
+
+                
+           
+            //lines
+                       
+            svg.append("path")
+                .data([data])
+                .attr("d", line1)
+                .attr("class", "line1");
+                           
+
+            svg.append("path")
+                .data([data])
+                .attr("d", line2)
+                .attr("class", "line2");
+            
+            
+            });
+        </script>
+    </body>
+</html>
