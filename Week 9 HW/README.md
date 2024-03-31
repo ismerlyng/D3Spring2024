@@ -14,3 +14,7 @@ This is the line chart after the data update (differences are buttons and a titl
 This is a closer look at the buttons themselves:
 
 ![Data visualization buttons](https://github.com/ismerlyng/D3Spring2024/blob/main/Week%209%20HW/Interaction%20Screenshot.png)
+
+This is an example of the change in the line chart if I were to click on the "Program Evaluator" button:
+
+![Example of button interaction](https://github.com/ismerlyng/D3Spring2024/blob/main/Week%209%20HW/Clicked%20Program%20Evaluator%20Screenshot.png)
