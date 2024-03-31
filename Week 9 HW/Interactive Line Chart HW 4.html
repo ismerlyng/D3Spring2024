@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Line Updates</title>
+        <script src= "https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+        
+            .axis path, 
+            .axis line{
+                stroke: black;
+            }
+
+            .axis text{
+                font-family: sans-serif;
+                font-size: 10px;
+                fill: black;
+                }
+            
+            .line {
+                fill: none; 
+                stroke: tomato; 
+                stroke-width: 2px;
+            }
+            
+      
+            button {
+                display: inline-block;
+                background-color: tomato;
+                border: none;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                border-radius: 2px; 
+                font-size: 12px;   
+            }
+
+            button:hover {
+                background-color: bisque;
+            }
+            
+           
+            h1 {
+                font-family: sans-serif;
+                font-size: 28px;
+                color: tomato;
+            }
+           
+
+        </style>
+    </head>
+    <body>
+        
+        <h1> A Look At Average Salaries in NYC's Administration for Children's Services</h1>
+        <button id="buttonCaseworker">Caseworker</button>
+        <button id="buttonEvaluator">Program Evaluator</button>
+        <button id="buttonDirector">Director of Social Services</button>
+        <br>
+        <script type="text/javascript">
+            
+             
+            const w = 500;
+            const h = 500;
+            const margin = 50;
+            const parseTime = d3.timeParse("%Y");
+
+            
+            
+            d3.csv("Interaction HW Data.csv").then(data => {
+            console.log("data", data)
+                
+                data.forEach(d => { 
+                d.year = parseTime(d.year);
+                d.caseworkeravg = +d.caseworkeravg;
+                d.directoravg = +d.directoravg;
+                d.evaluatoravg = +d.evaluatoravg;    
+                });
+            
+            //scales 
+            const xScale = d3.scaleTime()
+                             .domain(d3.extent(data, d => d.year)) 
+                             .range([margin, w-margin]); 
+
+            const yScale = d3.scaleLinear()
+                             .domain([0, d3.max(data, d => Math.max(d.caseworkeravg, d.directoravg))]) 
+                             .range([h-margin, margin]); 
+
+            //SVG
+            const svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+
+            //bottom axis 
+            const bottomAxis = d3.axisBottom()
+                                .scale(xScale)
+                                .tickFormat(d3.timeFormat("%Y"));
+             
+            svg.append("g")
+                .attr("class", "axis") 
+                .attr("transform", "translate(0," + (h-margin) + ")") 
+                .call(bottomAxis);
+            
+            //left axis
+            const leftAxis = d3.axisLeft()
+                             .scale(yScale);
+            
+            svg.append("g")
+               .attr("class", "axis") 
+               .attr("transform", "translate(" + margin + ",0)")
+               .call(leftAxis);
+            
+            function drawData(which){
+                
+                const coords = d3.line()
+                .x(d=>xScale(d.year))
+                .y(function(d){
+                 if (which == "caseworker avg"){return yScale(d.caseworkeravg)}
+                 else if (which == "evaluator avg"){return yScale(d.evaluatoravg)}
+                 else if (which == "director avg"){return yScale(d.directoravg)}
+                 else {return yScale(d.caseworkeravg)}   
+                });
+                
+
+                const line = svg.selectAll(".line")
+                .data([data])    
+                .join("path")
+                .transition() 
+
+                .duration(1000)
+                .attr("d", coords)
+                .attr("class", "line");
+            }
+            
+    
+            d3.selectAll("button").on("click", (event,d)=>{
+                const selected = event.currentTarget;
+                    if (selected.id == "buttonCaseworker"){
+                    drawData("caseworker avg")
+                    } else if (selected.id == "buttonEvaluator"){
+                    drawData("evaluator avg")
+                    } else if (selected.id == "buttonDirector"){
+                    drawData("director avg")
+                    } else {
+                    drawData("caseworker avg")
+                    }})
+            
+            drawData("caseworker avg")
+            });
+
+        </script>
+    </body>
+</html>
