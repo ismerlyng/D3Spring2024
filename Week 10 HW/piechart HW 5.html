@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Pie Chart HW</title>
+        <script src= "https://d3js.org/d3.v7.min.js"></script>
+        <style type="text/css">
+            
+            .labels{
+            font-size: 12px;
+            font-weight: bold;
+            font-family: sans-serif;
+            }
+
+            h1{
+                font-family: sans-serif;
+                font-size: 28px;
+                color: midnightblue; 
+            }
+
+            .tooltip{
+            position: absolute;
+            width: 90px;
+            height: 20px;
+            padding: 2px;    
+            text-align: center; 
+            font-family:sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            background: black; 
+            border-radius: 8px;
+            }
+            
+          
+        </style>
+    </head>
+    <body>
+        <h1> My Spring 2024 Credits, Broken Down by Course </h1>
+        <script type="text/javascript">
+       
+             
+            d3.csv("classes.csv").then(data => {
+                console.log("data", data)
+            
+                    //format data
+                    data.forEach(d => { 
+                    d.courses = d.courses;
+                    d.credits = +d.credits;
+                    });
+                
+            //declare consts
+            const w = 600;
+            const h = 600;
+            
+
+            const myColor = d3.scaleOrdinal(d3.schemeSpectral[5]);
+
+            //Radius information
+            const outerRadius = w/2;
+
+            const innerRadius = 0; 
+           
+            //d3.arc()creates our wedges 
+            const arc = d3.arc()  
+                           .innerRadius(innerRadius)
+                           .outerRadius(outerRadius) 
+                   
+
+            //pie generator
+            const pie = d3.pie().value(d=>d.credits)
+                       
+            //SVG
+            const svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+
+            //groups to build our chart
+            const groups = svg.selectAll("g.arc")
+                            .data(pie(data))
+                            .enter()
+                            .append("g")
+                            .attr("class", "arc")
+                            .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+                            console.log("pie data", pie(data));
+            
+            groups.append("path")
+                .attr("fill", (d,i)=> myColor(i))
+                .attr("d", arc); 
+
+            //Labels
+            groups.append("text")
+                  .attr("transform", d=> "translate(" + arc.centroid(d) + ")")
+                  .attr("text-anchor", "middle")
+                  .attr("class", "labels")
+                  .text(d=>d.data.courses);
+
+            //Adding tooltips
+            const tooltip = d3.select('body')
+            .append('div')
+            .attr('class', 'tooltip')
+            .style('opacity', 0);
+
+            const mouseover = function(event, d) {
+                    tooltip
+                    .html(`${d.data.credits} credit(s)`)
+                    .style("opacity", 1)
+                    .style("left", (event.pageX + 3) + "px")
+                    .style("top", (event.pageY + 3) + "px");
+                    }     
+
+            const mousemove = function(event, d) {
+                    tooltip
+                    .style("left", (event.pageX + 3) + "px")
+                    .style("top", (event.pageY + 3) + "px")
+                    }
+            
+            const mouseout = function(event, d) {
+                    tooltip
+                    .style("opacity", 0);
+                    }
+
+            groups.on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseout", mouseout);
+
+            });
+
+        </script>
+    </body>
+</html>
