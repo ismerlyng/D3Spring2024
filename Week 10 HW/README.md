@@ -1,12 +1,10 @@
 ## Creating a pie chart
 **April 16, 2024**
 
-I added a third salary to my visualization of ACS, or Administration for Children's Services, payroll data (data downloaded from [NYC Open Data](https://data.cityofnewyork.us/City-Government/Citywide-Payroll-Data-Fiscal-Year-/k397-673e/about_data)). Similarly to HW 3, I calculated the average pay of the third position - that of a Program Evaluator. This position had an average salary situated between that of a caseworker's and of a director's. I added buttons to display one line per position and show the changes on the Y-Axis.
+I visualized the number of credits I am taking this semester in the following pie chart, broken down by course (three courses total): 
 
-This was the line chart prior to the data update: 
+![Pie chart](https://github.com/ismerlyng/D3Spring2024/blob/main/Week%2010%20HW/pie%20chart%20screenshot.png)
 
-![Line chart with a blue and green line](https://github.com/ismerlyng/D3Spring2024/blob/main/Week%207%20HW/Multi%20Line%20Chart%20Image.png)
+The following is a gif of the tooltip interaction, displaying the number of credits per course (apologies for rough gif quality):
 
-This is the line chart after the data update (differences are buttons and a title): 
-
-![Line chart with buttons displaying different salaries](https://github.com/ismerlyng/D3Spring2024/blob/main/Week%209%20HW/Post%20Data%20Update%20Line%20Chart.png)
+![Pie chart interaction](https://github.com/ismerlyng/D3Spring2024/blob/main/Week%2010%20HW/Pie%20chart%20gif.gif)
